@@ -16,22 +16,17 @@
 #         description = f"Handcrafted {labels[0].lower()} product"
 
 #     return {
-#         "labels": labels[:5],
-#         "objects": objects[:5],
-#         "description": description
+#         "labels": [l.description for l in labels[:5]],
+#         "objects": [o.name for o in objects[:5]],
+#         "description": "Handcrafted product detected"
 #     }
-
-from google.cloud import vision
-
-def analyze_image(image_bytes: bytes):
-    client = vision.ImageAnnotatorClient()
-    image = vision.Image(content=image_bytes)
-
-    labels = client.label_detection(image=image).label_annotations
-    objects = client.object_localization(image=image).localized_object_annotations
-
+def generate_story_from_vision(image_bytes):
+    """
+    Placeholder for Vision + Gemini logic
+    """
     return {
-        "labels": [l.description for l in labels[:5]],
-        "objects": [o.name for o in objects[:5]],
-        "description": "Handcrafted product detected"
+        "product_type": "handcrafted item",
+        "materials": ["natural materials"],
+        "patterns": ["traditional patterns"],
+        "description": "A traditional handcrafted product made by skilled artisan"
     }
