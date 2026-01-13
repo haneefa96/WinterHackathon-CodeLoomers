@@ -75,7 +75,7 @@ Steps to run the project locally:
 4. Run the project
 
 ## Team Members
--Haneefa Riham
--Melria Smitha Gonsalves
--Rifa Nashwa
--S Vaishnavi
+-Haneefa Riham - backend
+-Melria Smitha Gonsalves-Documentation and presentation
+-Rifa Nashwa-frontend and UI design
+-S Vaishnavi-AI and google integration
