@@ -6,7 +6,7 @@ Craftora is an AI-powered platform that helps Indian artisans bring their tradit
 Craftora solves this by creating a digital identity for each artisan. Using AI, it converts product images and voice stories into clear, multilingual product listings and buyer-ready content, allowing artisans to focus on crafting while Craftora manages their digital presence.
 
 
-# Demo Video Link: <insert Google Drive link to the demo video of the working of your project>
+# Demo Video Link: https://drive.google.com/file/d/1ijY9-Tp_ibmHeYEXaanfSeBn0SKBUjyL/view?usp=drivesdk
 
 ## Features
 -AI-generated listings from images and voice
