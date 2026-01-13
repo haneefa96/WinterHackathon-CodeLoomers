@@ -8,5 +8,3 @@ db = firestore.Client()
 storage_client = storage.Client()
 
 PROJECT_ID = "codeloomers-484010"
-from google.cloud import firestore
-db = firestore.Client()

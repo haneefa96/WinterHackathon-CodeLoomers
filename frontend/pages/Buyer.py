@@ -1,8 +1,9 @@
 import streamlit as st
+import requests
 
 st.set_page_config(page_title="Buyer - Craftora", layout="wide")
 
-# ================= CSS =================
+# ================== STYLES ==================
 st.markdown("""
 <style>
 .stApp {
@@ -11,49 +12,44 @@ st.markdown("""
 
 .buyer-container {
     text-align: center;
-    margin-top: 120px;
+    margin-top: 60px;
 }
 
 .buyer-title {
     font-family: 'Playfair Display', serif;
     font-size: 60px;
     color: #6b442e;
-    margin-bottom: 0px;   /* subtitle very close */
 }
 
 .buyer-subtitle {
     font-family: 'Playfair Display', serif;
-    font-size: 26px;
+    font-size: 24px;
     color: #9c7b60;
-    margin-top: 0px;
-    margin-bottom: 40px;  /* space before search button */
+    margin-bottom: 40px;
 }
 
-/* FULL WIDTH SEARCH BUTTON */
+.search-box {
+    width: 60%;
+    font-size: 22px;
+    padding: 12px;
+    border-radius: 20px;
+    border: none;
+    margin-bottom: 20px;
+}
+
 .search-btn {
-    background-color: #3e2f22;  /* dark brown */
-    color: #f3e6cf;  /* beige text */
-    padding: 16px 0;       /* vertical padding */
-    font-size: 26px;
-    font-family: 'Playfair Display', serif;
-    border-radius: 40px;
+    background-color: #3e2f22;
+    color: #f3e6cf;
+    padding: 14px 40px;
+    font-size: 22px;
+    border-radius: 30px;
     border: none;
     cursor: pointer;
-    width: 50%;           /* <-- makes it really wide */
-    max-width: 500px;     /* optional max width */
-    display: block;
-    margin: 0 auto;       /* center the button */
-    transition: 0.3s ease;
-}
-
-.search-btn:hover {
-    background-color: #2a1d14;  /* darker on hover */
-    transform: scale(1.05);
 }
 </style>
 """, unsafe_allow_html=True)
 
-# ================= PAGE CONTENT =================
+# ================== UI ==================
 st.markdown("""
 <div class="buyer-container">
     <div class="buyer-title">Welcome</div>
@@ -61,9 +57,22 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-# ================= SEARCH BUTTON =================
-st.markdown("""
-<div>
-    <button class="search-btn">🔍 Search</button>
-</div>
-""", unsafe_allow_html=True)
+query = st.text_input("What are you looking for?", placeholder="eg. Sarees, Pottery, Handmade jewelry")
+
+if st.button("🔍 Search"):
+    if query:
+        try:
+            response = requests.post(
+                "http://127.0.0.1:8000/api/generate",
+                json={"prompt": query}
+            )
+
+            if response.status_code == 200:
+                result = response.json()["response"]
+                st.success("✨ AI Found This:")
+                st.write(result)
+            else:
+                st.error("Backend error")
+
+        except:
+            st.error("Backend not reachable")

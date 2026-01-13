@@ -13,7 +13,7 @@ def get_base64(file_path):
     with open(file_path, "rb") as f:
         return base64.b64encode(f.read()).decode()
 
-bg_image = get_base64("background.png")
+bg_image = get_base64("background.jpeg")
 seller_icon = get_base64("Seller.jpeg")
 buyer_icon = get_base64("Buyer.jpeg")
 
@@ -134,11 +134,11 @@ st.markdown(
     f"""
     <div class="btn-container">
         <a class="custom-btn" href="/Seller">
-            <img src="data:image/png;base64,{seller_icon}">
+            <img src="data:image/jpeg;base64,{seller_icon}">
             Seller
         </a>
         <a class="custom-btn" href="/Buyer">
-            <img src="data:image/png;base64,{buyer_icon}">
+            <img src="data:image/jpeg;base64,{buyer_icon}">
             Buyer
         </a>
     </div>

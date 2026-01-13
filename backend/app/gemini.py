@@ -1,80 +1,67 @@
-# def generate_artisan_content(story, labels=None, vision_data=None):
-#     """
-#     Placeholder for Gemini text generation
-#     """
-#     return {
-#         "title": f"Handcrafted {labels or 'Artisan Product'}",
-#         "description": f"{story}. This product reflects traditional craftsmanship.",
-#         "caption": "Made with care by Indian artisans"
-#     }
+import vertexai
+from vertexai.generative_models import GenerativeModel, Part
+import os
 
-# # PROJECT_ID = "codeloomers-484010"
-# # LOCATION = "us-central1"
+# Initialize Vertex AI
+# You should ideally set these via environment variables or rely on default credentials if running in GCP
+PROJECT_ID = os.environ.get("GOOGLE_CLOUD_PROJECT", "codeloomers-484010") # Default fallback from file check
+LOCATION = "us-central1"
 
-# # vertexai.init(project=PROJECT_ID, location=LOCATION)
+try:
+    vertexai.init(project=PROJECT_ID, location=LOCATION)
+    # Using a model that supports both text and images if needed, though we deal with text description mostly here
+    model = GenerativeModel("gemini-1.5-flash") 
+    print("✅ Vertex AI Gemini Model Initialized")
+except Exception as e:
+    print(f"⚠️ Vertex AI Init Error: {e}")
+    model = None
 
-# # model = GenerativeModel("gemini-1.5-flash")
-
-# # def generate_craft_twin(story: str, labels: list):
-# #     prompt = f"""
-# # You are an expert in Indian handicrafts.
-
-# # Story from artisan:
-# # {story}
-
-# # Detected image labels:
-# # {", ".join(labels)}
-
-# # Generate:
-# # 1. Product title
-# # 2. Product description (2 lines)
-# # 3. Instagram caption with hashtags
-# # """
-
-# #     response = model.generate_content(prompt)
-
-# #     return {
-# #         "ai_output": response.text
-# #     }
-
-def generate_ai_content(story, labels=None, vision_data=None):
+def generate_ai_content(story: str, labels: list = None):
     """
-    Placeholder for Gemini AI content generation
+    Generates product title, description, and hashtags using Gemini.
     """
-    return {
-        "title": f"Handcrafted {labels or 'Artisan Product'}",
-        "description": f"{story}. This product reflects traditional craftsmanship.",
-        "caption": "Made with care by Indian artisans"
-    }
+    if not model:
+        return {
+            "title_en": "Error: AI Model Not Loaded",
+            "caption_en": "Please check backend configuration.",
+            "title_hi": "",
+            "caption_hi": ""
+        }
 
+    label_str = ", ".join(labels) if labels else "Handcrafted item"
 
-# import vertexai
-# from vertexai.preview.generative_models import GenerativeModel
+    prompt = f"""
+    You are an expert copywriter for Indian artisans selling handmade products.
+    
+    Artisan's Story/Input: "{story}"
+    Detected Visual Tags: {label_str}
 
-# PROJECT_ID = "your-gcp-project-id"
-# LOCATION = "us-central1"
+    Based on this, generate:
+    1. An English Title (short, catchy).
+    2. An English Instagram-style Caption (storytelling, engaging, use emojis).
+    3. A Hindi Title (translated/transliterated approriately).
+    4. A Hindi Caption (emotional, connecting to tradition).
+    
+    Output strictly in JSON format:
+    {{
+        "title_en": "...",
+        "caption_en": "...",
+        "title_hi": "...",
+        "caption_hi": "..."
+    }}
+    """
 
-# def generate_ai_content(story: str, labels: str):
-#     vertexai.init(project=PROJECT_ID, location=LOCATION)
-
-#     model = GenerativeModel("gemini-1.5-flash")
-
-#     prompt = f"""
-#     You are helping an artisan sell handmade products.
-
-#     Story:
-#     {story}
-
-#     Labels:
-#     {labels}
-
-#     Generate:
-#     1. A short title
-#     2. A marketing caption
-#     """
-
-#     response = model.generate_content(prompt)
-
-#     return {
-#         "output": response.text
-#     }
+    try:
+        response = model.generate_content(prompt)
+        # Clean up code blocks if present
+        text = response.text.replace("```json", "").replace("```", "").strip()
+        import json
+        return json.loads(text)
+    except Exception as e:
+        print(f"Gemini Generation Error: {e}")
+        return {
+            "title_en": "Handcrafted Article",
+            "caption_en": f"Beautiful handcrafted item. Story: {story}",
+            "title_hi": "हस्तनिर्मित वस्तु",
+            "caption_hi": f"सुंदर हस्तनिर्मित वस्तु। कहानी: {story}"
+        }
